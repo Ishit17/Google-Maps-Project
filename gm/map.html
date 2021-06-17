@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Google map</title>
+  <style>
+    #map{
+      height : 100%;
+      width : 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Google Maps</h1>
+  <div id="map"></div>
+  <script>
+    let map;
+    function initMap(){
+      //Map options
+        var options = {
+          zoom:8,
+          center:{lat:15.3173 ,lng:75.7139},
+          mapTypeId: "terrain",
+        }
+        //New map
+        map=new google.maps.Map(document.getElementById('map'), options);
+        
+        //Listen for click on map
+        google.maps.event.addListener(map,'click',
+  function(event){
+      //Add marker
+      addMarker({coords:event.latlng});
+  });
+
+
+  //Add marker
+  var marker=new google.maps.Marker({
+    position:{lat:12.9784,lng:77.6408},
+    map:map,
+  });
+  var infowindow = new google.maps.InfoWindow({
+    content:'<h1>Indira Nagar</h1>'
+  });
+
+  marker.addListener('click', function(){
+    infowindow.open(map,marker);
+  });
+
+
+  //Array of markers
+  var markers = [
+    {coords:{lat:15.39569,lng:75.09031}
+  },
+    {coords:{lat:12.89701,lng:77.60715}
+  },
+  ];
+
+  //loop of markers
+  for(var i=0;i<markers.length;i++){
+    addMarker(markers[i])  
+  }
+      }
+
+  function addMarker(props){
+    var marker=new google.maps.Marker({
+      position:props.coords,
+      map:map,
+    });
+
+  //Add rectangle to map
+  const rectangle = new google.maps.Rectangle({
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
+    map,
+    bounds:{
+      north: 13.791616448961335,
+      south: 12.973992292482578,
+      east: 78.07732911842986,
+      west: 77.56371830002722,
+    }
+    
+  });
+    addsquare()
+    }
+
+    function addsquare(){
+      for(var r=0;r<4;r++){
+        var d=new google.maps.geometry.spherical.computeOffset(new google.maps.LatLng(13.791616448961335,78.07732911842986) ,1000, 90)
+        var c=new google.maps.geometry.spherical.computeOffset(new google.maps.LatLng(13.791616448961335,78.07732911842986) ,1000, 180)
+        rec(d,c)
+      }
+    }
+    function rec(south_west,north_east){
+    const rectangle = new google.maps.Rectangle({
+      strokeColor: "#000080",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#ffffff",
+      fillOpacity: 0.35,
+      map:map,
+      bounds:new google.maps.LatLngBounds( 
+        south_west,
+        north_east,
+      )
+
+    });
+   
+    }
+  </script>
+
+ <script defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqcPao8BXmjD0J4CfVzRvVRoGxFa5bLL8&libraries=geometry,places&callback=initMap">
+</script>
+</body>
+</html>
